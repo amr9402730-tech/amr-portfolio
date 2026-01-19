@@ -42,40 +42,76 @@ window.addEventListener('scroll', () => {
 
 // Form Validation
 
-// Edit Button System
-const btn = document.createElement('button');
-btn.innerHTML = 'Edit';
-btn.style.position = 'fixed';
-btn.style.bottom = '30px';
-btn.style.right = '30px';
-btn.style.width = '60px';
-btn.style.height = '60px';
-btn.style.background = '#00bcd4';
-btn.style.color = 'white';
-btn.style.border = 'none';
-btn.style.borderRadius = '50%';
-btn.style.cursor = 'pointer';
-btn.style.zIndex = '1000';
-
-let mode = false;
-btn.addEventListener('click', function() {
-  mode = !mode;
-  btn.innerHTML = mode ? 'Done' : 'Edit';
-  document.querySelectorAll('p, h3').forEach(el => {
-    el.contentEditable = mode;
-    if (mode) el.style.backgroundColor = '#f0f0f0';
-    else el.style.backgroundColor = '';
-  });
+// Edit Mode with Admin Authentication
+const editBtn = document.createElement('button');
+editBtn.innerHTML = 'Edit';
+editBtn.style.position = 'fixed';
+editBtn.style.bottom = '30px';
+editBtn.style.right = '30px';
+editBtn.style.width = '60px';
+editBtn.style.height = '60px';
+editBtn.style.background = '#00bcd4';
+editBtn.style.color = 'white';
+editBtn.style.border = 'none';
+editBtn.style.borderRadius = '50%';
+editBtn.style.cursor = 'pointer';
+editBtn.style.fontSize = '18px';
+editBtn.style.zIndex = '1000';
+let authPassed = false;
+const loginModal = document.createElement('div');
+loginModal.id = 'login-modal';
+loginModal.style.position = 'fixed';
+loginModal.style.top = '0';
+loginModal.style.left = '0';
+loginModal.style.width = '100%';
+loginModal.style.height = '100%';
+loginModal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+loginModal.style.zIndex = '2000';
+loginModal.style.display = 'none';
+loginModal.style.justifyContent = 'center';
+loginModal.style.alignItems = 'center';
+loginModal.style.flexDirection = 'column';
+loginModal.innerHTML = '<div style="background:white;padding:40px;border-radius:10px;text-align:center;width:300px;"><h2>Admin Login</h2><input type="text" id="username" placeholder="Username" style="width:90%;padding:10px;margin:10px 0;border:1px solid #ddd;border-radius:5px;"><input type="password" id="password" placeholder="Password" style="width:90%;padding:10px;margin:10px 0;border:1px solid #ddd;border-radius:5px;"><button id="loginBtn" style="width:100%;padding:10px;background:#00bcd4;color:white;border:none;border-radius:5px;cursor:pointer;margin-top:10px;">Login</button><button id="cancelBtn" style="width:100%;padding:10px;background:#ccc;color:#333;border:none;border-radius:5px;cursor:pointer;margin-top:10px;">Cancel</button></div>';
+document.body.appendChild(loginModal);
+editBtn.addEventListener('click', function() {
+  if (!authPassed) {
+    loginModal.style.display = 'flex';
+  } else {
+    toggleEditMode();
+  }
 });
-
-document.body.appendChild(btn);
-const form = document.querySelector('.contact-form');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Thank you for your message! I will get back to you soon.');
-    form.reset();
+document.getElementById('loginBtn').addEventListener('click', function() {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  if (user === 'administrator' && pass === 'P@ss20191') {
+    authPassed = true;
+    loginModal.style.display = 'none';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    toggleEditMode();
+  } else {
+    alert('Invalid credentials!');
+  }
+});
+document.getElementById('cancelBtn').addEventListener('click', function() {
+  loginModal.style.display = 'none';
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+});
+function toggleEditMode() {
+  const isEdit = editBtn.innerHTML === 'Edit';
+  editBtn.innerHTML = isEdit ? 'Done' : 'Edit';
+  document.querySelectorAll('p, h3, h1, h2').forEach(el => {
+    el.contentEditable = isEdit;
+    if (isEdit) {
+      el.style.backgroundColor = '#f0f0f0';
+      el.style.border = '1px solid #00bcd4';
+      el.style.padding = '5px';
+    } else {
+      el.style.backgroundColor = '';
+      el.style.border = '';
+      el.style.padding = '';
+    }
   });
 }
-
-console.log('Portfolio loaded successfully!');
+document.body.appendChild(editBtn);
