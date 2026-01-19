@@ -41,6 +41,34 @@ window.addEventListener('scroll', () => {
 });
 
 // Form Validation
+
+// Edit Button System
+const btn = document.createElement('button');
+btn.innerHTML = 'Edit';
+btn.style.position = 'fixed';
+btn.style.bottom = '30px';
+btn.style.right = '30px';
+btn.style.width = '60px';
+btn.style.height = '60px';
+btn.style.background = '#00bcd4';
+btn.style.color = 'white';
+btn.style.border = 'none';
+btn.style.borderRadius = '50%';
+btn.style.cursor = 'pointer';
+btn.style.zIndex = '1000';
+
+let mode = false;
+btn.addEventListener('click', function() {
+  mode = !mode;
+  btn.innerHTML = mode ? 'Done' : 'Edit';
+  document.querySelectorAll('p, h3').forEach(el => {
+    el.contentEditable = mode;
+    if (mode) el.style.backgroundColor = '#f0f0f0';
+    else el.style.backgroundColor = '';
+  });
+});
+
+document.body.appendChild(btn);
 const form = document.querySelector('.contact-form');
 if (form) {
   form.addEventListener('submit', (e) => {
