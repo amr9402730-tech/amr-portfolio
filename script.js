@@ -115,3 +115,60 @@ function toggleEditMode() {
   });
 }
 document.body.appendChild(editBtn);
+
+
+// Back-to-Top Button Functionality
+const backToTopBtn = document.querySelector('.back-to-top');
+
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset > 300) {
+    backToTopBtn.classList.add('show');
+  } else {
+    backToTopBtn.classList.remove('show');
+  }
+});
+
+backToTopBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
+// Intersection Observer for Scroll Animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('section').forEach(section => {
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(30px)';
+  observer.observe(section);
+});
+
+// Professional Transitions for Interactive Elements
+document.querySelectorAll('.skill-box, .timeline-item, .project-box, .cert-item').forEach(element => {
+  element.addEventListener('mouseenter', function() {
+    this.style.transition = 'all 0.3s ease';
+  });
+});
+
+// Close mobile menu when clicking on a link
+document.querySelectorAll('.navbar a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (menuIcon) {
+      navbar.style.display = 'none';
+    }
+  });
+});
